@@ -17,3 +17,4 @@ params :
               'n'     - number of points to be trianguled
               'list'  - list of points to be trianguled
                       - can be used to compute a subset of points
+                      - example : {n: 4, list: [0,1,2,3,4]}
