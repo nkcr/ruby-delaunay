@@ -1,21 +1,47 @@
 #!/usr/bin/ruby
 #
+# Purpose :
+# ----------
 # Compute a delaunay triangulation.
 # The algorithm combines features of both the Watson and 
 # Lawson procedures.
 # Algorithm of complexity O(n^5/4)
+# Thank's to http://bit.ly/18Nr3GE
+#
+# Public functions :
+# -----------------
+# 'deltri(x,y,params={})'   - Starting point of the module
+#                           - Launch the process
+#
+# Private functions :
+# -----------------
+# 'delaun(numpts,n,x,y,list,bin,stack,v,e,numtri=0)'  - Compute the triangulation
+# 'triloc(xp,yp,x,y,v,e,numtri)'                      - Find a triangle which encloses xp,yp
+# 'swap(x1,y1,x2,y2,x3,y3,xp,yp)'                     - Tell if xp,yp is inside circumcircle
 # 
-# Instructions :
-# Just use the require statement in your file like
-# 'require delau.rb'  then call 'Delau.deltri' with your
-# params :
+# INSTRUCTION :
+# -------------
+# - The module needs to be imported with 'require delau.rb'
+# - Call the function 'Delau.deltri' which ask for those params :
+# 
 #   'x'       - list of x coordinates
 #   'y'       - list of y coordinates
 #   'params'  - hash of optional params
-#             'n'     - number of points to be trianguled
+#             'n'     - number of points to be trianguled, start from 0 (for 1 point n=0)
 #             'list'  - list of points to be trianguled
 #                     - can be used to compute a subset of points
-#     
+# 
+# - Return a hash containing :
+#   'x'       - list of x coordinates
+#   'y'       - list of y coordinates
+#   'list'    - list of points trianguled
+#             - if none was given it's [0,1,2,...n]
+#   'v'       - list of triangle vertices
+#             - the vertices of n triangle is v[0..2][n]
+#   'e'       - list of adjacents triangles
+#             - the adjacents of n triangle is e[0..2][n]
+#   'n'       - the number of points trianguled
+#             - if none was given it's x.length
 #
 module Delau
   extend self
@@ -26,6 +52,7 @@ module Delau
     defaults = {
       n: x.length-1,
       list: [*0..x.length-1],
+      supertriangle: [[],[],[]]
     }
     params = defaults.merge(params)
     n = params[:n]
@@ -54,7 +81,10 @@ module Delau
       ymin = [ymin, y[p]].min
       ymax = [ymax, y[p]].max
     end
-    dmax = [xmax-xmin,ymax-ymin].max
+    #
+    # In case there is only one point (otherwise dmax=0)
+    #
+    dmax = ([xmax-xmin,ymax-ymin].max == 0)? [xmax,ymax].max : [xmax-xmin,ymax-ymin].max
     #
     # Normalize x-y coord of points
     #
@@ -298,8 +328,7 @@ module Delau
         v2 = v[i%3][t]
         if (y[v1]-yp)*(x[v2]-xp) > (x[v1]-xp)*(y[v2]-yp)
           t = e[i-1][t]
-          #raise "Error in triloc.\n current t=#{t}.\n Points=#{previous}.\n e=#{e}\n v=#{v}\n x=#{x}\n y=#{y}" if previous.include?(t)
-          return t if previous.include?(t)
+          return t-4 if previous.include?(t)
           previous.push(t)
           cont = true
         end
