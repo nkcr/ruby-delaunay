@@ -153,7 +153,7 @@ def draw x,y,v, groups=[]
 			yp = (yp / a.length)*hratio+yoffset
 			r = Math.sqrt((wratio+0)**2 + (hratio+0)**2)*a.length
 			oval xp-r, yp-r, radius: r
-		end
+		end # groups
 		#
 		# Triangles
 		#
@@ -165,7 +165,7 @@ def draw x,y,v, groups=[]
 			line x[v0]*wratio+xoffset, y[v0]*hratio+yoffset, x[v1]*wratio+xoffset, y[v1]*hratio+yoffset
 			line x[v1]*wratio+xoffset, y[v1]*hratio+yoffset, x[v2]*wratio+xoffset, y[v2]*hratio+yoffset
 			line x[v2]*wratio+xoffset, y[v2]*hratio+yoffset, x[v0]*wratio+xoffset, y[v0]*hratio+yoffset
-		end
+		end # triangles
 	end
 end
 
