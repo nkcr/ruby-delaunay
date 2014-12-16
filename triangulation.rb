@@ -16,7 +16,7 @@ def merge x,y,v,d
 	# 			- Represents the maximum distance between two 
 	# 				points to be merged
 	#
-	# Outpus:
+	# Output :
 	# -------
 	# 'a'		- todo
 	#
